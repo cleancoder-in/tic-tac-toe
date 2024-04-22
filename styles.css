@@ -1,0 +1,110 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  width: 960px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container .message {
+  margin-top: 20px;
+  width: 400px;
+  height: 30px;
+  font-size: 24px;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+}
+
+.container .message.bgColor-green {
+  background-color: limegreen;
+}
+
+.container .grid-wrapper {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container .grid-wrapper .grid {
+  width: 350px;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.container .grid-wrapper .grid .cell {
+  width: 90px;
+  height: 90px;
+  border: 1px solid black;
+  flex: 1 0 auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+}
+
+.container .grid-wrapper .form-control {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+  width: 350px;
+}
+
+.container .grid-wrapper .form-control div:nth-child(1) {
+  display: flex;
+  column-gap: 10px;
+}
+
+.container .grid-wrapper .form-control input {
+  width: 50%;
+  margin-bottom: 10px;
+  font-size: 24px;
+  padding: 5px;
+}
+
+.container .grid-wrapper .form-control input::placeholder {
+  font-size: 16px;
+}
+
+.container .grid-wrapper .form-control div:nth-child(2) {
+  display: inline-flex;
+  justify-content: center;
+}
+
+.container .grid-wrapper .form-control .restart {
+  display: inline-block;
+  padding: 10px 30px;
+  font-size: 18px;
+  color: #fff;
+  background-color: darkgray;
+  border: 1px solid darkgray;
+  border-radius: 5px;
+}
+.container .grid-wrapper .form-control .restart:hover {
+  background-color: gray;
+  cursor: pointer;
+}
