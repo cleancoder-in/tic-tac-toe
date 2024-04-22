@@ -91,20 +91,30 @@ h1 {
 }
 
 .container .grid-wrapper .form-control div:nth-child(2) {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
+  column-gap: 10px;
+}
+
+.container .grid-wrapper .form-control .btn {
+  padding: 10px 30px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.container .grid-wrapper .form-control .start {
+  background-color: rgb(99, 97, 97);
+  border: 1px solid rgb(99, 97, 97);
+  color: #fff;
+  cursor: pointer;
+}
+.container .grid-wrapper .form-control .start:hover,
+.container .grid-wrapper .form-control .restart:hover {
+  cursor: pointer;
 }
 
 .container .grid-wrapper .form-control .restart {
-  display: inline-block;
-  padding: 10px 30px;
-  font-size: 18px;
-  color: #fff;
-  background-color: darkgray;
-  border: 1px solid darkgray;
-  border-radius: 5px;
-}
-.container .grid-wrapper .form-control .restart:hover {
-  background-color: gray;
-  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid rgb(99, 97, 97);
+  color: rgb(99, 97, 97);
 }

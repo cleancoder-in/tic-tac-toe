@@ -84,8 +84,14 @@ const Game = (() => {
 
   const start = () => {
     players = [
-      createPlayer("Player-One", "X"),
-      createPlayer("Player-Two", "O"),
+      createPlayer(
+        document.getElementById("playerOne").value || "Player-One",
+        "X"
+      ),
+      createPlayer(
+        document.getElementById("playerTwo").value || "Player-Two",
+        "O"
+      ),
     ];
     activePlayer = players[0];
     gameOver = false;
@@ -125,7 +131,11 @@ const Game = (() => {
   };
 })();
 
-document.addEventListener("DOMContentLoaded", () => {
+// document.addEventListener("DOMContentLoaded", () => {
+//   Gameboard.render();
+// });
+
+document.querySelector(".start").addEventListener("click", () => {
   Game.start();
 });
 
