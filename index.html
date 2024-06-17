@@ -6,32 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
-    <h1>Tic Tac Toe</h1>
-    <div class="container">
 
-        <p class="message "></p>
+    <div class="container">
+        <div class="nav">Tic Tac Toe</div>
+
+        <div class="message-box">
+            <p></p>
+        </div>
 
 
         <div class="grid-wrapper">
+            <div class="playersInfo hide">
+                <p>Player X: <span></span></p>
+                <p>Player O: <span></span></p>
+            </div>
             <div class="grid">
             </div>
 
             <div class="form-control">
-                <div>
-                    <input type="text" id="playerOne" placeholder="First player name...">
-                    <input type="text" id="playerTwo" placeholder="Second player name...">
+                <div class="form-input">
+                    <label for="playerOne">
+                        Player X: <input type="text" id="playerOne" placeholder="Player X name..." required>
+                    </label>
+
+
+                    <label for="playerTwo">
+                        Player O: <input type="text" id="playerTwo" placeholder="Player O name..." required>
+                    </label>
+
+
                 </div>
 
-                <div>
-                    <button class="btn start">Start Game</button>
-                    <button class="btn restart">Restart</button>
+                <div class="btn-wrapper">
+                    <button class="btn quit hide">Quit</button>
+                    <button class="btn start">Play</button>
+                    <button class="btn restart hide">Restart</button>
                 </div>
             </div>
         </div>
 
+        <div class="footer">
+            <p>
+                Copyright ©
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>
+                cleancoder-in
+            </p>
+            <a href="https://github.com/cleancoder-in" target="_blank">
+                <i class="fa-brands fa-github"></i></a>
+        </div>
 
 
     </div>
