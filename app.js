@@ -1,49 +1,19 @@
-const displayController = (() => {
-  const renderMessage = (message) => {
-    const messageEl = document.querySelector(".message");
-    messageEl.classList.add("bgColor-green");
-    messageEl.textContent = message;
-  };
-  return {
-    renderMessage,
-  };
-})();
+// Event handlers
+document.querySelector(".start").addEventListener("click", () => {
+  GameController.start();
+});
 
-const Gameboard = (() => {
-  const rows = 3;
-  const columns = 3;
-  const board = [];
+document.querySelector(".restart").addEventListener("click", () => {
+  GameController.restart();
 
-  for (let i = 0; i < rows * columns; i++) {
-    board.push("");
-  }
-  const render = () => {
-    console.log(board);
-    let boardHTML = "";
-    board.forEach((cell, index) => {
-      boardHTML += `<div class="cell" id="cell-${index}">${cell}</div>`;
-    });
-    document.querySelector(".grid").innerHTML = boardHTML;
-    // event listeners on cells
-    const cells = document.querySelectorAll(".cell");
-    cells.forEach((cell) => {
-      cell.addEventListener("click", Game.handleClick);
-    });
-  };
+  GameController.start();
+});
 
-  const update = (index, mark) => {
-    getGameboard()[index] = mark;
-    render();
-  };
-
-  const getGameboard = () => board;
-
-  return {
-    render,
-    update,
-    getGameboard,
-  };
-})();
+document.querySelector(".quit").addEventListener("click", () => {
+  GameController.restart();
+  gameOver = false;
+  GameController.quit();
+});
 
 // factory function
 const createPlayer = (name, mark) => {
@@ -53,48 +23,98 @@ const createPlayer = (name, mark) => {
   };
 };
 
-const checkForWin = (board) => {
-  const winCombos = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-  ];
-  for (let i = 0; i < winCombos.length; i++) {
-    let [a, b, c] = winCombos[i];
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return true;
+// display controller module
+const displayController = (() => {
+  const messageEl = document.querySelector(".message-box p");
+  const renderMessage = (message, messageFlag) => {
+    if (messageFlag) {
+      messageEl.classList.add("bgColor-green");
+    } else {
+      messageEl.classList.add("bgColor-red");
     }
+
+    messageEl.textContent = message;
+  };
+
+  const removeMessage = () => {
+    messageEl.removeAttribute("class");
+    messageEl.textContent = "";
+  };
+  return {
+    renderMessage,
+    removeMessage,
+  };
+})();
+
+// Gameboard module
+const Gameboard = (() => {
+  const rows = 3;
+  const columns = 3;
+  const board = [];
+
+  const gridEl = document.querySelector(".grid");
+
+  for (let i = 0; i < rows * columns; i++) {
+    board.push("");
   }
-  return false;
-};
+  const render = () => {
+    let boardHTML = "";
+    board.forEach((cell, index) => {
+      boardHTML += `<div class="cell" id="cell-${index}">${cell}</div>`;
+    });
+    gridEl.innerHTML = boardHTML;
+    // event listeners on cells
+    const cells = document.querySelectorAll(".cell");
+    cells.forEach((cell) => {
+      cell.addEventListener("click", GameController.handleClick);
+    });
+  };
 
-const checkForTie = (board) => {
-  return board.every((cell) => cell !== "");
-};
+  const update = (index, mark) => {
+    board[index] = mark;
+    render();
+  };
 
-const Game = (() => {
+  const getGameboard = () => board;
+  const removeGrid = () => {
+    gridEl.innerHTML = "";
+  };
+  return {
+    render,
+    update,
+    getGameboard,
+    removeGrid,
+  };
+})();
+
+//Game controller module
+const GameController = (() => {
   let players = [];
   let activePlayer;
   let gameOver;
 
+  const playerOneInputEl = document.querySelector("#playerOne");
+  const playerTwoInputEl = document.querySelector("#playerTwo");
+  const formInputEl = document.querySelector(".form-input");
+  const playersInfoEl = document.querySelector(".playersInfo");
+  const btnWrapperEl = document.querySelector(".btn-wrapper");
+
   const start = () => {
+    // check if fields are empty
+    if (checkForNull()) {
+      displayController.renderMessage("Please fill the details.", false);
+      return false;
+    } else {
+      setGameboardPage();
+    }
+
     players = [
-      createPlayer(
-        document.getElementById("playerOne").value || "Player-One",
-        "X"
-      ),
-      createPlayer(
-        document.getElementById("playerTwo").value || "Player-Two",
-        "O"
-      ),
+      createPlayer(playerOneInputEl.value, "X"),
+      createPlayer(playerTwoInputEl.value, "O"),
     ];
     activePlayer = players[0];
     gameOver = false;
+
     Gameboard.render();
   };
 
@@ -102,6 +122,20 @@ const Game = (() => {
     for (let i = 0; i < 9; i++) {
       Gameboard.update(i, "");
     }
+    gameOver = false;
+    displayController.removeMessage();
+  };
+
+  const quit = () => {
+    playerOneInputEl.value = "";
+    playerTwoInputEl.value = "";
+    players = [];
+    Gameboard.removeGrid();
+    formInputEl.classList.remove("hide");
+    playersInfoEl.classList.add("hide");
+    btnWrapperEl.firstElementChild.classList.add("hide");
+    btnWrapperEl.firstElementChild.nextElementSibling.classList.remove("hide");
+    btnWrapperEl.lastElementChild.classList.add("hide");
   };
 
   const switchPlayerTurn = () => {
@@ -115,35 +149,62 @@ const Game = (() => {
     Gameboard.update(index, activePlayer.mark);
     if (checkForWin(Gameboard.getGameboard())) {
       gameOver = true;
-      displayController.renderMessage(`${activePlayer.name} won!`);
+      displayController.renderMessage(`${activePlayer.name} won!`, true);
     } else if (checkForTie(Gameboard.getGameboard())) {
       gameOver = true;
-      displayController.renderMessage(`It's a tie`);
+      displayController.renderMessage(`It's a tie`, true);
     }
 
     switchPlayerTurn();
   };
 
+  const checkForWin = (board) => {
+    const winCombos = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+    ];
+    for (let i = 0; i < winCombos.length; i++) {
+      let [a, b, c] = winCombos[i];
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const checkForTie = (board) => {
+    return board.every((cell) => cell !== "");
+  };
+
+  function checkForNull() {
+    if (!playerOneInputEl.value || !playerTwoInputEl.value) return true;
+  }
+
+  function setGameboardPage() {
+    // hide the message element
+    displayController.removeMessage();
+    // hide the form input element
+    formInputEl.classList.add("hide");
+    //set the name of players and make it visible
+    playersInfoEl.firstElementChild.children[0].textContent = playerOneInputEl.value.toUpperCase();
+    playersInfoEl.lastElementChild.children[0].textContent = playerTwoInputEl.value.toUpperCase();
+    playersInfoEl.classList.remove("hide");
+    //make the other buttons visible
+    btnWrapperEl.firstElementChild.classList.remove("hide");
+    btnWrapperEl.firstElementChild.nextElementSibling.classList.add("hide");
+    btnWrapperEl.lastElementChild.classList.remove("hide");
+  }
+
   return {
     start,
     handleClick,
     restart,
+    quit,
   };
 })();
-
-// document.addEventListener("DOMContentLoaded", () => {
-//   Gameboard.render();
-// });
-
-document.querySelector(".start").addEventListener("click", () => {
-  Game.start();
-});
-
-document.querySelector(".restart").addEventListener("click", () => {
-  Game.restart();
-  gameOver = false;
-  const messageEl = document.querySelector(".message");
-  messageEl.classList.remove("bgColor-green");
-  messageEl.textContent = "";
-  Game.start();
-});
